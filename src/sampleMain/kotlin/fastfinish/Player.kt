@@ -19,7 +19,7 @@ class Player: Area2D() {
     }
 
     init {
-        setScript(ResourceLoader.load("res://Games/FastFinish/Scripts/Player.gdns")) as Reference
+        setScript(ResourceLoader.load("res://Games/FastFinish/Scripts/Player.gdns") as Reference)
     }
 
     override fun _ready() {

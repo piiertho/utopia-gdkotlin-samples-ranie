@@ -20,13 +20,12 @@ class MainScreen: Node() {
     }
 
     override fun _ready() {
-        chooseGameButton = (getNode(NodePath("MenuButtons/ChooseGameButton")) as Button).apply {
-            connect("pressed", this@MainScreen, "", VariantArray())
-        }
+        chooseGameButton = getNode(NodePath("MenuButtons/ChooseGameButton")) as Button
+        chooseGameButton.signalPressed.connect(this, this::onChooseGameButtonPressed)
 
-        quitButton = (getNode(NodePath(("MenuButtons/QuitButton"))) as Button).apply {
-            connect("pressed", this@MainScreen, "", VariantArray())
-        }
+
+        quitButton = getNode(NodePath(("MenuButtons/QuitButton"))) as Button
+        quitButton.signalPressed.connect(this, this::onQuitButtonPressed)
     }
 
     fun onChooseGameButtonPressed() {

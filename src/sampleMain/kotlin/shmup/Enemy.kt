@@ -2,6 +2,7 @@ package shmup
 
 import godot.*
 import godot.core.NodePath
+import godot.core.VariantArray
 
 class Enemy: Area2D() {
 
@@ -39,11 +40,18 @@ class Enemy: Area2D() {
                 health--
                 if (health == 0){
                     (getTree().getRoot().getNode(NodePath("Stage/Explosion")) as AudioStreamPlayer2D).play()
-                    val args = godotArrayOf(0.2, 30, 3)
+
+                    val args = VariantArray()
+                    args.append(0.2f)
+                    args.append(30)
+                    args.append(3)
                     camera.callv("shake", args)
-                    getParent().getParent().queueFree()
+                    (getParent() as Stage).getParent()?.queueFree()
                 } else {
-                    val args = godotArrayOf(0.15, 5, 2)
+                    val args = VariantArray()
+                    args.append(0.15f)
+                    args.append(5)
+                    args.append(2)
                     camera.callv("shake", args)
                 }
                 obj.queueFree()

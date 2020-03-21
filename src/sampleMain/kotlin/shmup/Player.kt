@@ -58,9 +58,10 @@ class Player: KinematicBody2D() {
             val bul = (Bullet.instance() as Area2D).apply {
                 position = this@Player.position
             }
-            val notifier = VisibilityNotifier2D().apply {
-                connect("screen_exited", bul, "queue_free", VariantArray())
-            }
+
+            val notifier = VisibilityNotifier2D()
+            notifier.signalScreenExited.connect(bul, bul::queueFree)
+
             (getNode(NodePath("Shoot")) as AudioStreamPlayer2D).play()
             bul.addChild(notifier)
             getParent()?.addChild(bul)

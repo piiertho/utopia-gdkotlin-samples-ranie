@@ -28,24 +28,25 @@ class ChooseGameScreen: Node() {
     }
 
     override fun _ready() {
-        playDodgeButton = (getNode(NodePath("MenuButtons/PlayDodgeButton")) as Button).apply {
-            connect("pressed", this@ChooseGameScreen, "onPlayDodgeButtonPressed", VariantArray())
-        }
-        playPongButton = (getNode(NodePath("MenuButtons/PlayPongButton")) as Button).apply {
-            connect("pressed", this@ChooseGameScreen, "onPlayPongButtonPressed", VariantArray())
-        }
-        playShmupButton = (getNode(NodePath("MenuButtons/PlayShmupButton")) as Button).apply {
-            connect("pressed", this@ChooseGameScreen, "onPlayShmupButtonPressed", VariantArray())
-        }
-        playCatchBallButton = (getNode(NodePath("MenuButtons/PlayCatchBallButton")) as Button).apply {
-            connect("pressed", this@ChooseGameScreen, "onPlayCatchBallButtonPressed", VariantArray())
-        }
-        playFastFinishButton = (getNode(NodePath("MenuButtons/PlayFastFinishButton")) as Button).apply {
-            connect("pressed", this@ChooseGameScreen, "onPlayFastFinishButtonPressed", VariantArray())
-        }
-        backButton = (getNode(NodePath("MenuButtons/BackButton")) as Button).apply {
-            connect("pressed", this@ChooseGameScreen, "onBackButtonPressed", VariantArray())
-        }
+        playDodgeButton = getNode(NodePath("MenuButtons/PlayDodgeButton")) as Button
+        playDodgeButton.signalPressed.connect(this, this::onPlayDodgeButtonPressed)
+
+
+        playPongButton = getNode(NodePath("MenuButtons/PlayPongButton")) as Button
+        playPongButton.signalPressed.connect(this, this::onPlayPongButtonPressed)
+
+
+        playShmupButton = getNode(NodePath("MenuButtons/PlayShmupButton")) as Button
+        playShmupButton.signalPressed.connect(this, this::onPlayShmupButtonPressed)
+
+        playCatchBallButton = getNode(NodePath("MenuButtons/PlayCatchBallButton")) as Button
+        playCatchBallButton.signalPressed.connect(this, this::onPlayCatchBallButtonPressed)
+
+        playFastFinishButton = getNode(NodePath("MenuButtons/PlayFastFinishButton")) as Button
+        playFastFinishButton.signalPressed.connect(this, this::onPlayFastFinishButtonPressed)
+
+        backButton = getNode(NodePath("MenuButtons/BackButton")) as Button
+        backButton.signalPressed.connect(this, this::onBackButtonPressed)
     }
 
     fun onPlayDodgeButtonPressed() {

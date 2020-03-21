@@ -23,20 +23,22 @@ class Player: Area2D() {
                 registerMethod(Player::on_Player_body_entered)
                 registerMethod(Player::start)
 
-                registerProperty(Player::speed, 400)
+                registerProperty(Player::speed, 400, hint = PropertyHint.range(200, 1000))
             }
         }
     }
 
     override fun _ready() {
-        addUserSignal(Signal::hit.name)
+        addUserSignal(signalHit.name, VariantArray())
         playerSprite = getNode(NodePath("AnimatedSprite")) as AnimatedSprite
         collisionShape = getNode(NodePath("CollisionShape2D")) as CollisionShape2D
         screensize = getViewportRect().size
         hide()
 
-        this.connect("body_entered", this, "_on_Player_body_entered", VariantArray())
-        this.connect(Signal::hit.name, getParent(), "gameOver", VariantArray())
+        signalBodyEntered.connect(this, this::on_Player_body_entered)
+
+        val parent = getParent<Main>()
+        signalHit.connect(parent, parent::gameOver)
     }
 
     override fun _process(delta: Float) {
@@ -94,7 +96,7 @@ class Player: Area2D() {
     @Suppress("UNUSED_PARAMETER")
     fun on_Player_body_entered(body: Object) {
         hide()
-        emitSignal(Signal::hit.name)
+        signalHit.emit()
         collisionShape.callDeferred("set_disabled", true)
     }
 

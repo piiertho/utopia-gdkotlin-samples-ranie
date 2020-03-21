@@ -13,7 +13,7 @@ class HUD : CanvasLayer() {
     lateinit var waitingTimer: Timer
     lateinit var gameOverTimer: Timer
 
-    val signalStartGame by signal
+    val signalStartGame by signal0()
 
     companion object: GodotClass<Node, HUD>(::HUD) {
         override fun init(registry: ClassMemberRegistry<HUD>) {
@@ -33,19 +33,22 @@ class HUD : CanvasLayer() {
     override fun _ready() {
         messageLabel = getNode(NodePath("MessageLabel")) as Label
         scoreLabel = getNode(NodePath("ScoreLabel")) as Label
-        startButton = (getNode(NodePath("StartButton")) as Button).apply {
-            connect("pressed", this@HUD, "onStartButtonPressed", VariantArray())
-        }
-        messageTimer = (getNode(NodePath("MessageTimer")) as Timer).apply {
-            connect("timeout", this@HUD, "onMessageTimerTimeout", VariantArray())
-        }
-        waitingTimer = getNode(NodePath("WaitingTimer")) as Timer
-        gameOverTimer = (getNode(NodePath("GameOverTimer")) as Timer).apply {
-            connect("timeout", this@HUD, "onGameOverTimerTimeout", VariantArray())
-        }
 
-        addUserSignal(Signal::startGame.name)
-        connect(Signal::startGame.name, getParent(), "newGame", VariantArray())
+        val startButton = getNode(NodePath("StartButton")) as Button
+        startButton.signalPressed.connect(this, this::onStartButtonPressed)
+
+
+        val timer = getNode(NodePath("MessageTimer")) as Timer
+        timer.signalTimeout.connect(this, this::onMessageTimerTimeout)
+
+        waitingTimer = getNode(NodePath("WaitingTimer")) as Timer
+
+        val gameOverTimer = getNode(NodePath("GameOverTimer")) as Timer
+        gameOverTimer.signalTimeout.connect(this, this::onGameOverTimerTimeout)
+
+        addUserSignal(signalStartGame.name, VariantArray())
+        val parent = getParent() as Main
+        signalStartGame.connect(parent, parent::newGame)
     }
 
     fun showMessage(text: String) {

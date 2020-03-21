@@ -36,15 +36,14 @@ class Main: Node() {
     override fun _ready() {
         mobScene = ResourceLoader.load("res://Games/Dodge/Scenes/Mob.tscn") as PackedScene
 
-        mobTimer = (getNode(NodePath("MobTimer")) as Timer).apply {
-            connect("timeout", this@Main, "onMobTimerTimeout", VariantArray())
-        }
-        scoreTimer = (getNode(NodePath("ScoreTimer")) as Timer).apply {
-            connect("timeout", this@Main, "onScoreTimerTimeout", VariantArray())
-        }
-        startTimer = (getNode(NodePath("StartTimer")) as Timer).apply {
-            connect("timeout", this@Main, "onStartTimerTimeout", VariantArray())
-        }
+        mobTimer = (getNode(NodePath("MobTimer")) as Timer)
+        mobTimer.signalTimeout.connect(this, this::onMobTimerTimeout)
+
+        scoreTimer = (getNode(NodePath("ScoreTimer")) as Timer)
+        scoreTimer.signalTimeout.connect(this, this::onScoreTimerTimeout)
+
+        startTimer = (getNode(NodePath("StartTimer")) as Timer)
+        startTimer.signalTimeout.connect(this, this::onStartTimerTimeout)
 
         startPosition = getNode(NodePath("StartPosition")) as Position2D
         mobPath = getNode(NodePath("MobPath")) as Path2D
@@ -63,12 +62,18 @@ class Main: Node() {
         getTree().callGroup("enemies", "free")
         score = 0
 
-        getNode(NodePath("Player"))?.callv("start", godot_array(startPosition.position))
+        var param = VariantArray()
+        param.append(startPosition.position)
+        getNode(NodePath("Player"))?.callv("start", param)
         startTimer.start()
 
-        getNode(NodePath("HUD"))?.callv("updateScore", godotArrayOf(score))
+        param = VariantArray()
+        param.append(score)
+        getNode(NodePath("HUD"))?.callv("updateScore", param)
 
-        getNode(NodePath("HUD"))?.callv("showMessage", godotArrayOf("Get ready!"))
+        param = VariantArray()
+        param.append("Get ready!")
+        getNode(NodePath("HUD"))?.callv("showMessage", param)
     }
 
     fun onStartTimerTimeout() {
@@ -78,7 +83,9 @@ class Main: Node() {
 
     fun onScoreTimerTimeout() {
         score += 1
-        getNode(NodePath("HUD"))?.callv("updateScore", godotArrayOf(score))
+        val param = VariantArray()
+        param.append(score)
+        getNode(NodePath("HUD"))?.callv("updateScore", param)
     }
 
     fun onMobTimerTimeout() {

@@ -26,8 +26,10 @@ class Ball: KinematicBody2D() {
 
     override fun _ready() {
         velocity = Vector2(xVel, yVel)
+
         visibilityNotifier2D = getNode(NodePath("VisibilityNotifier2D")) as VisibilityNotifier2D
-        visibilityNotifier2D.connect("screen_exited", getParent(), "_on_VisibilityNotifier2D_screen_exited", VariantArray())
+        val parent = getParent() as Main
+        visibilityNotifier2D.signalScreenExited.connect(parent, parent::on_VisibilityNotifier2D_screen_exited)
     }
 
     override fun _physics_process(delta: Float) {

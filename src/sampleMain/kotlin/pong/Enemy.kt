@@ -6,7 +6,6 @@ import godot.core.Vector2
 
 class Enemy: KinematicBody2D() {
 
-    @RegisterProperty(true, "400")
     var speed = 400
 
     companion object: GodotClass<Node, Enemy>(::Enemy) {
